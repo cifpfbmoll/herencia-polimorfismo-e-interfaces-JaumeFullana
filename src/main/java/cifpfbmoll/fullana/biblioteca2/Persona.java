@@ -131,4 +131,6 @@ public abstract class Persona {
             System.out.println("No existe ninguna persona con ese nombre y apellidos en el sistema");
         }
     }
+    
+    public abstract void cambiarContraseña();
 }

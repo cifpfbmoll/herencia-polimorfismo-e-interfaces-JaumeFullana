@@ -88,7 +88,7 @@ public class Reserva {
                                 if (listaLibros.get(j).getCopiasDisponibles()>=1){
                                     LocalDateTime fecha= LocalDateTime.now();
                                     Libro l1=new Libro(listaLibros.get(j));
-                                    Reserva r1=new Reserva(l1,fecha.getDayOfMonth()+"/"+fecha.getMonth()+"/"+fecha.getYear(),fecha.getHour()+":"+fecha.getMinute());
+                                    Reserva r1=new Reserva(l1,fecha.getDayOfMonth()+"/"+fecha.getMonthValue()+"/"+fecha.getYear(),fecha.getHour()+":"+fecha.getMinute());
                                     ((Usuario)listaPersona.get(i)).getListaReservas().add(r1);
                                     listaLibros.get(j).setCopiasDisponibles(listaLibros.get(j).getCopiasDisponibles()-1, listaLibros.get(j).getNumeroCopias());
                                     ((Usuario)listaPersona.get(i)).setLibrosReservados(((Usuario)listaPersona.get(i)).getLibrosReservados()+1);

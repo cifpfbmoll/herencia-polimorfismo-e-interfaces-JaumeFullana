@@ -23,12 +23,14 @@ public class Main {
         crearPrimerAdministrador(biblioteca);
         int privilegios=1;
         int opcionSesion;
-        int [] listaInicioSesion;
+        String [] listaInicioSesion1;
+        int [] listaInicioSesion2;
         int tlfUsuarioActivo=0;
+        String nifBibliotecarioActivo=((Bibliotecario)biblioteca.getListaPersona().get(0)).getNif();
         //bucle para poder realizar acciones hasta que se desee
         while (privilegios!=0){
             if (privilegios==1){
-                privilegios = menuAdministrador(privilegios, biblioteca);
+                privilegios = menuAdministrador(privilegios, biblioteca, nifBibliotecarioActivo);
             }
             else if (privilegios==2){
                 privilegios = menuUsuario(privilegios, biblioteca, tlfUsuarioActivo);
@@ -37,13 +39,16 @@ public class Main {
             opcionSesion = opcionesInicioSesion();
             //inicio de sesion de administrador
             if (opcionSesion==1){
-                privilegios = menuInicioSesionAdministrador(biblioteca, privilegios);
+                listaInicioSesion1 = menuInicioSesionAdministrador(biblioteca, privilegios, nifBibliotecarioActivo);
+                privilegios=Integer.parseInt(listaInicioSesion1[0]);
+                nifBibliotecarioActivo=listaInicioSesion1[1];
             } 
             //inicio de sesion de usuario
             else if(opcionSesion==2){
-                listaInicioSesion = menuInicioSesionUsuario(biblioteca, privilegios, tlfUsuarioActivo);
-                tlfUsuarioActivo=listaInicioSesion[1];
-                privilegios=listaInicioSesion[0];
+                listaInicioSesion2 = menuInicioSesionUsuario(biblioteca, privilegios, tlfUsuarioActivo);
+                privilegios=listaInicioSesion2[0];
+                tlfUsuarioActivo=listaInicioSesion2[1];
+                
             } 
             else if (opcionSesion==0){
                 System.out.println("ADIOS!");
@@ -162,7 +167,7 @@ public class Main {
      * @param privilegios int que hace referencia a que puede hacer el usuario conectado(administrador o usuario normal).
      * @return privilegios int que hace referencia a que puede hacer el usuario conectado(administrador o usuario normal).
      */
-    public static int menuInicioSesionAdministrador(Biblioteca biblioteca, int privilegios) {
+    public static String [] menuInicioSesionAdministrador(Biblioteca biblioteca, int privilegios, String nifBibliotecarioActivo) {
         System.out.println("Inserta tu NIF");
         String NIF=sc.nextLine();
         System.out.println("Inserta tu contraseña");
@@ -186,6 +191,7 @@ public class Main {
                     }
                     if(((Bibliotecario)biblioteca.getListaPersona().get(i)).getNif().equals(NIF) && ((Bibliotecario)biblioteca.getListaPersona().get(i)).getContrasena().equals(contrasena)){
                         privilegios=1;
+                        nifBibliotecarioActivo=NIF;
                         System.out.println("Bienvenido "+biblioteca.getListaPersona().get(i).getNombre());
                     }
                 }
@@ -195,7 +201,9 @@ public class Main {
         if (!encontrado){
             System.out.println("No hay ningun bibliotecario con ese NIF");
         }
-        return privilegios;
+        String privilegiosString=Integer.toString(privilegios);
+        String[] listaInicioSesion={privilegiosString,nifBibliotecarioActivo};
+        return listaInicioSesion;
     }
     /**
      * Metodo de un menu de las diferentes opcion de un Usuario de la biblioteca, recibe por parametro un int
@@ -218,7 +226,8 @@ public class Main {
             System.out.println("Pulsa 3 para mostrar todos los libros");
             System.out.println("Pulsa 4 para mostrar todos los libros disponibles en este momento");
             System.out.println("Pulsa 5 para que se muestren los libros que tienes reservados");
-            System.out.println("Pulsa 6 para salir de la sesion");
+            System.out.println("Pulsa 6 para cambiar tu contraseña(Correo Electronico)");
+            System.out.println("Pulsa 7 para salir de la sesion");
             opcionGestor=sc.nextInt();
             sc.nextLine();
             
@@ -264,8 +273,21 @@ public class Main {
                     }
                     
                     break;
-                    
                 case 6:
+                    i=0;
+                    encontrado=false;
+                    while (i<biblioteca.getListaPersona().size() && !encontrado){
+                        if(biblioteca.getListaPersona().get(i) instanceof Usuario){
+                            if (((Usuario)biblioteca.getListaPersona().get(i)).getTelefono()==tlfUsuarioActivo){
+                                ((Usuario)biblioteca.getListaPersona().get(i)).cambiarContraseña();
+                                encontrado=true;
+                            }
+                        }
+                        i++;
+                    }
+                    break;
+                    
+                case 7:
                     System.out.println("Hasta la proxima!");
                     privilegios=9;
                     break;
@@ -288,21 +310,23 @@ public class Main {
      * @param biblioteca Objeto de la clase Biblioteca.
      * @return privilegios int que hace referencia a que puede hacer el usuario conectado(administrador o usuario normal).
      */
-    public static int menuAdministrador(int privilegios, Biblioteca biblioteca) {
+    public static int menuAdministrador(int privilegios, Biblioteca biblioteca, String nifBibliotecarioActivo) {
         int opcion;
         //while de interfaz de empleado
         while (privilegios==1){
             System.out.println("El programa se divide en dos gestores, el de libros y el de personas");
             System.out.println("Pulsa 1 si deseas acceder al gestor de libros");
             System.out.println("Pulsa 2 si deseas acceder al gestor de personas");
+            System.out.println("Pulsa 3 si deseas cambiar tu contraseña");
             System.out.println("Pulsa 0 para salir de la sesion");
             opcion=sc.nextInt();
             sc.nextLine();
             //comprobacion de error
-            while (opcion>2 || opcion<0){
+            while (opcion>3 || opcion<0){
                 System.out.println("ERROR: esa opcion no existe.");
                 System.out.println("Pulsa 1 si deseas acceder al gestor de libros");
                 System.out.println("Pulsa 2 si deseas acceder al gestor de personas");
+                System.out.println("Pulsa 3 si deseas cambiar tu contraseña");
                 System.out.println("Pulsa 0 para salir de la sesion");
                 opcion=sc.nextInt();
                 sc.nextLine();
@@ -312,6 +336,20 @@ public class Main {
             }
             else if (opcion==2){
                 opcion = gestorPersonasAdministrador(opcion, biblioteca);
+            }
+            else if (opcion==3){
+                int i=0;
+                boolean encontrado=false;
+                while (i<biblioteca.getListaPersona().size() && !encontrado){
+                    if(biblioteca.getListaPersona().get(i) instanceof Bibliotecario){
+                        if (((Bibliotecario)biblioteca.getListaPersona().get(i)).getNif().equals(nifBibliotecarioActivo)){
+                            ((Bibliotecario)biblioteca.getListaPersona().get(i)).cambiarContraseña();
+                            encontrado=true; 
+                        }
+                    }
+                    i++;
+                }
+                opcion=9;
             }
             else if (opcion==0){
                 System.out.println("Volvamos al selector de gestores entonces");

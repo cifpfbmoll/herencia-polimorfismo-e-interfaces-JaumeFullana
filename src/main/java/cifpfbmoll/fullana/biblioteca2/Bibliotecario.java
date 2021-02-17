@@ -81,6 +81,14 @@ public class Bibliotecario extends Persona{
         this.setContrasena(sc.nextLine());
     }
 
+    @Override
+    public void cambiarContraseña() {
+        System.out.println("Introduce tu nueva contraseña");
+        String contrasena=sc.nextLine();
+        this.setContrasena(contrasena);
+        System.out.println("Contraseña actualizada");
+    }
+
     
     
     

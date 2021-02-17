@@ -143,6 +143,14 @@ public class Usuario extends Persona{
             System.out.println(listaReservas.get(i).toString());
         }
     }
+
+    @Override
+    public void cambiarContraseña() {
+        System.out.println("Introduce tu nuevo correo electronico que funciona como contraseña");
+        String correo=sc.nextLine();
+        this.setCorreoElectronico(correo);
+        System.out.println("Contraseña actualizada");
+    }
     
     
     

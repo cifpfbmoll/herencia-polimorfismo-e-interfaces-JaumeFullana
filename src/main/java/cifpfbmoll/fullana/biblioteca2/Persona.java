@@ -8,10 +8,12 @@ package cifpfbmoll.fullana.biblioteca2;
 import java.util.Scanner;
 import java.util.ArrayList;
 /**
- *
+ *Esta clase es abstracta, por tanto no se podran hacer instancias de esta clase.
+ * 
  * @author Jaume
  */
-public class Persona {
+
+public abstract class Persona {
     
     public static Scanner sc=new Scanner(System.in);
     //Atributos de Persona

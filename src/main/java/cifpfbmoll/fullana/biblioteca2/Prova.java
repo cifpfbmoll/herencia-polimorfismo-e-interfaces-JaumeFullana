@@ -16,7 +16,7 @@ public class Prova {
     public static void main(String[] args) {
         Biblioteca biblioteca=new Biblioteca("Son");
         Bibliotecario b1=new Bibliotecario();
-        b1=b1.solicitarDatosPersona();
+        b1.solicitarDatosPersona();
         biblioteca.getListaPersona().add(b1);
         System.out.println(biblioteca.getListaPersona().get(0));
         System.out.println("1 registrar 2 borrar");
@@ -25,7 +25,7 @@ public class Prova {
         while (respuesta!=0){
             if (respuesta==1){
             Bibliotecario b2=new Bibliotecario();
-            b2=b2.solicitarDatosPersona();
+            b2.solicitarDatosPersona();
             biblioteca.getListaPersona().add(b2);
             }
             else if (respuesta==2){

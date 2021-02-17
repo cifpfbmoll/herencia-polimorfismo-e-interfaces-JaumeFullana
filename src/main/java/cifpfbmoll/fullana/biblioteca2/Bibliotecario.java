@@ -71,16 +71,14 @@ public class Bibliotecario extends Persona{
     }
 
     @Override
-    public Bibliotecario solicitarDatosPersona() {
-        Persona p1=super.solicitarDatosPersona();
+    public void solicitarDatosPersona() {
+        super.solicitarDatosPersona();
         System.out.println("Escribe el puesto de trabajo del bibliotecario");
-        String puestoTrabajo=sc.nextLine();
+        this.setPuestoTrabajo(sc.nextLine());
         System.out.println("Escribe el nif del bibliotecario");
-        String nif=sc.nextLine();
+        this.setNif(sc.nextLine());
         System.out.println("Escribe la contraseña del bibliotecario");
-        String contrasena=sc.nextLine();
-        Bibliotecario b1=new Bibliotecario(p1,puestoTrabajo,nif,contrasena);
-        return b1;
+        this.setContrasena(sc.nextLine());
     }
 
     

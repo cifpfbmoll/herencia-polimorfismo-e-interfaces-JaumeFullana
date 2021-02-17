@@ -42,7 +42,6 @@ public class Libro {
     }
     
     public Libro(Libro lbr) {
-        contadorLibros++;
         this.setISBN(lbr.getISBN());
         this.setTitulo(lbr.getTitulo());
         this.setAutor(lbr.getAutor());

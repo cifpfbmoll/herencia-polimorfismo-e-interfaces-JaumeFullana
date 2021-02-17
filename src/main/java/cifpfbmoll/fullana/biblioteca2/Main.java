@@ -23,15 +23,15 @@ public class Main {
         crearPrimerAdministrador(biblioteca);
         int privilegios=1;
         int opcionSesion;
-        String [] listaInicioSesion;
-        String NIFUsuarioActivo="";
+        int [] listaInicioSesion;
+        int tlfUsuarioActivo=0;
         //bucle para poder realizar acciones hasta que se desee
         while (privilegios!=0){
             if (privilegios==1){
                 privilegios = menuAdministrador(privilegios, biblioteca);
             }
             else if (privilegios==2){
-                privilegios = menuUsuario(privilegios, biblioteca, NIFUsuarioActivo);
+                privilegios = menuUsuario(privilegios, biblioteca, tlfUsuarioActivo);
             }
             //Opciones de inicio de sesion o para salir del programa
             opcionSesion = opcionesInicioSesion();
@@ -41,9 +41,9 @@ public class Main {
             } 
             //inicio de sesion de usuario
             else if(opcionSesion==2){
-                listaInicioSesion = menuInicioSesionUsuario(biblioteca, privilegios, NIFUsuarioActivo);
-                NIFUsuarioActivo=listaInicioSesion[1];
-                privilegios=Integer.parseInt(listaInicioSesion[0]);
+                listaInicioSesion = menuInicioSesionUsuario(biblioteca, privilegios, tlfUsuarioActivo);
+                tlfUsuarioActivo=listaInicioSesion[1];
+                privilegios=listaInicioSesion[0];
             } 
             else if (opcionSesion==0){
                 System.out.println("ADIOS!");
@@ -109,10 +109,10 @@ public class Main {
      * 
      * @param biblioteca Objeto de la clase Biblioteca.
      * @param privilegios int que hace referencia a que puede hacer el usuario conectado(administrador o usuario normal).
-     * @param NIFUsuarioActivo String que es el NIF del usuario que esta en la sesion actualmente.
+     * @param tlfUsuarioActivo String que es el NIF del usuario que esta en la sesion actualmente.
      * @return listaInicioSesion Array creada para poder almacenar y devolver el int privilegios y el String NIFUsuarioActivo.
      */
-    public static String[] menuInicioSesionUsuario(Biblioteca biblioteca, int privilegios, String NIFUsuarioActivo){
+    public static int[] menuInicioSesionUsuario(Biblioteca biblioteca, int privilegios, int tlfUsuarioActivo){
         System.out.println("Inserta tu telefono");
         int telefono=sc.nextInt();
         sc.nextLine();
@@ -135,20 +135,19 @@ public class Main {
                         }
 
                     }
-                    if(biblioteca.getListaPersona().get(i).getNIF().equals(NIF) && biblioteca.getListaUsuario().get(i).getContrasena().equals(contrasena)){
+                    if(((Usuario)biblioteca.getListaPersona().get(i)).getTelefono()==telefono && (((Usuario)biblioteca.getListaPersona().get(i)).getCorreoElectronico().equals(correo))){
                         privilegios=2;
                         System.out.println("Bienvenido "+biblioteca.getListaPersona().get(i).getNombre());
-                        NIFUsuarioActivo=biblioteca.getListaPersona().get(i).getNIF();
+                        tlfUsuarioActivo=((Usuario)biblioteca.getListaPersona().get(i)).getTelefono();
                     }
                 }
             }
             i++;
         }
         if (!encontrado){
-            System.out.println("No hay ningun usuario con ese NIF");
+            System.out.println("No hay ningun usuario con ese telefono");
         }
-        String privilegiosString=Integer.toString(privilegios);
-        String[] listaInicioSesion={privilegiosString,NIFUsuarioActivo};
+        int[] listaInicioSesion={privilegios,tlfUsuarioActivo};
         return listaInicioSesion;
     }
     
@@ -171,28 +170,30 @@ public class Main {
         int i=0;
         boolean encontrado=false;
         while (i<biblioteca.getListaPersona().size() && !encontrado){
-            if(biblioteca.getListaPersona().get(i).getNIF().equals(NIF)){
-                encontrado=true;
-                boolean salir=false;
-                while (!(biblioteca.getListaPersona().get(i).getContrasena().equals(contrasena)) && !salir){
-                    System.out.println("La contraseña es incorrecta, inserta la contraseña correcta.");
-                    System.out.println("Si quieres salir del inicio de sesion apriete enter");
-                    contrasena=sc.nextLine();
-                    if (contrasena.equals("")){
-                        salir=true;
-                        privilegios=9;
+            if(biblioteca.getListaPersona().get(i) instanceof Bibliotecario){
+                if(((Bibliotecario)biblioteca.getListaPersona().get(i)).getNif().equals(NIF)){
+                    encontrado=true;
+                    boolean salir=false;
+                    while (!((Bibliotecario)biblioteca.getListaPersona().get(i)).getContrasena().equals(contrasena) && !salir){
+                        System.out.println("La contraseña es incorrecta, inserta la contraseña correcta."); 
+                        System.out.println("Si quieres salir del inicio de sesion apriete enter");
+                        contrasena=sc.nextLine();
+                        if (contrasena.equals("")){
+                            salir=true;
+                            privilegios=9;
+                        }
+
                     }
-                    
-                }
-                if(biblioteca.getListaPersona().get(i).getNIF().equals(NIF) && biblioteca.getListaPersonal().get(i).getContrasena().equals(contrasena)){
-                    privilegios=1;
-                    System.out.println("Bienvenido "+biblioteca.getListaPersona().get(i).getNombre());
+                    if(((Bibliotecario)biblioteca.getListaPersona().get(i)).getNif().equals(NIF) && ((Bibliotecario)biblioteca.getListaPersona().get(i)).getContrasena().equals(contrasena)){
+                        privilegios=1;
+                        System.out.println("Bienvenido "+biblioteca.getListaPersona().get(i).getNombre());
+                    }
                 }
             }
             i++;
         }
         if (!encontrado){
-            System.out.println("No hay ningun usuario del personal con ese NIF");
+            System.out.println("No hay ningun bibliotecario con ese NIF");
         }
         return privilegios;
     }
@@ -204,10 +205,10 @@ public class Main {
      * 
      * @param privilegios int que hace referencia a que puede hacer el usuario conectado(administrador o usuario normal).
      * @param biblioteca Objeto de la clase Biblioteca.
-     * @param NIFUsuarioActivo String que es el NIF del usuario que esta en la sesion actualmente.
+     * @param tlfUsuarioActivo String que es el NIF del usuario que esta en la sesion actualmente.
      * @return privilegios int que hace referencia a que puede hacer el usuario conectado(administrador o usuario normal).
      */
-    public static int menuUsuario(int privilegios, Biblioteca biblioteca, String NIFUsuarioActivo) {
+    public static int menuUsuario(int privilegios, Biblioteca biblioteca, int tlfUsuarioActivo) {
         int opcionGestor;
         //while de interfaz de usuario, gestiona Libros
         while (privilegios==2){
@@ -253,9 +254,11 @@ public class Main {
                     int i=0;
                     boolean encontrado=false;
                     while (i<biblioteca.getListaPersona().size() && !encontrado){
-                        if (biblioteca.getListaPersona().get(i).getNIF().equals(NIFUsuarioActivo)){
-                            biblioteca.getListaPersona().get(i).mostrarLibrosReservados();
-                            encontrado=true;
+                        if(biblioteca.getListaPersona().get(i) instanceof Usuario){
+                            if (((Usuario)biblioteca.getListaPersona().get(i)).getTelefono()==tlfUsuarioActivo){
+                                ((Usuario)biblioteca.getListaPersona().get(i)).mostrarLibrosReservados();
+                                encontrado=true;
+                            }
                         }
                         i++;
                     }
@@ -376,13 +379,13 @@ public class Main {
     
     public static void crearBibliotecario(Biblioteca biblioteca){
         Bibliotecario b1=new Bibliotecario();
-        b1=b1.solicitarDatosPersona();
+        b1.solicitarDatosPersona();
         biblioteca.getListaPersona().add(b1);
     }
     
     public static void crearUsuario(Biblioteca biblioteca){
         Usuario u1=new Usuario();
-        u1=u1.solicitarDatosPersona();
+        u1.solicitarDatosPersona();
         biblioteca.getListaPersona().add(u1);
     }
     /**
@@ -449,53 +452,33 @@ public class Main {
                     break;
                     
                 case 7:
-                    System.out.println("Inserta el NIF del usuario para el que va a reservar el libro");
-                    String NIF=sc.nextLine();
-                    int i=0;
-                    boolean encontrado=false;
-                    while (i<biblioteca.getListaPersona().size() && !encontrado){
-                        if (biblioteca.getListaPersona().get(i).getNIF().equals(NIF)){
-                            encontrado=true;
-                            biblioteca.getListaPersona().get(i).reservarLibro(biblioteca.getListaLibros());
-                        }
-                        i++;
-                    }
-                    if(!encontrado){
-                        System.out.println("No existe ningun usuario de la biblioteca que tenga ese NIF");
-                    }
+                    Reserva.reservarLibro(biblioteca.getListaPersona(), biblioteca.getListaLibros()); 
                     break;
                     
                 case 8:
-                    System.out.println("Inserta el NIF del usuario para el que va a devolver el libro");
-                    NIF=sc.nextLine();
-                    i=0;
-                    encontrado=false;
-                    while (i<biblioteca.getListaPersona().size() && !encontrado){
-                        if (biblioteca.getListaPersona().get(i).getNIF().equals(NIF)){
-                            biblioteca.getListaPersona().get(i).devolverLibro(biblioteca.getListaLibros());
-                            encontrado=true;
-                        }
-                        i++;
-                    }
-                    if(!encontrado){
-                        System.out.println("No existe ningun usuario de la biblioteca que tenga ese NIF");
-                    }
+                    Reserva.devolverLibro(biblioteca.getListaPersona(), biblioteca.getListaLibros()); 
                     break;
                     
                 case 9:
-                    System.out.println("Inserta el NIF del usuario");
-                    NIF=sc.nextLine();
-                    i=0;
-                    encontrado=false;
+                    System.out.println("Dime el numero de telefono de tu usuario");
+                    int telefono=sc.nextInt();
+                    sc.nextLine();
+                    System.out.println("Ahora tu correo electronico");
+                    String correo=sc.nextLine();
+                    int i=0;
+                    boolean encontrado=false;
                     while (i<biblioteca.getListaPersona().size() && !encontrado){
-                        if (biblioteca.getListaPersona().get(i).getNIF().equals(NIF)){
-                            biblioteca.getListaPersona().get(i).mostrarLibrosReservados();
-                            encontrado=true;
+                        if(biblioteca.getListaPersona().get(i) instanceof Usuario){
+                            if (((Usuario)biblioteca.getListaPersona().get(i)).getTelefono()==(telefono) && 
+                                ((Usuario)biblioteca.getListaPersona().get(i)).getCorreoElectronico().equals(correo)){
+                                ((Usuario)biblioteca.getListaPersona().get(i)).mostrarLibrosReservados();
+                                encontrado=true;
+                            }
                         }
                         i++;
                     }
                     if(!encontrado){
-                        System.out.println("No existe ningun usuario de la biblioteca que tenga ese NIF");
+                        System.out.println("No existe ningun usuario de la biblioteca que tenga ese telefono y ese correo electronico, hay algun error");
                     }
                     break;
                     

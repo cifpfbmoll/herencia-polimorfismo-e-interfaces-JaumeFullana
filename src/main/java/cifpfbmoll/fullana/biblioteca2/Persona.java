@@ -91,18 +91,16 @@ public class Persona {
      * 
      * @param listaPersona Arraylist donde se guardan los libros de la biblioteca
      */
-    public Persona solicitarDatosPersona(){
+    public void solicitarDatosPersona(){
         System.out.println("Escribe el nombre del usuario:"); 
-        String nombre=sc.nextLine();
+        this.setNombre(sc.nextLine());
         System.out.println("Escribe el primer apellido del usuario");
-        String apellido1=sc.nextLine();
+        this.setApellido1(sc.nextLine());
         System.out.println("Escribe el segundo apellido del usuario");
-        String apellido2=sc.nextLine();
+        this.setApellido2(sc.nextLine());
         System.out.println("Escribe la edad del usuario");
-        int edad=sc.nextInt();
+        this.setEdad(sc.nextInt());
         sc.nextLine();
-        Persona p1=new Persona(nombre,apellido1,apellido2,edad);
-        return p1;
     };
     /**
      * Metodo que busca una Persona por su NIF en la lista listaPersonal de la biblioteca,

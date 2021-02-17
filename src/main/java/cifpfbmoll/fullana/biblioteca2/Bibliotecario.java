@@ -5,11 +5,14 @@
  */
 package cifpfbmoll.fullana.biblioteca2;
 
+import java.util.ArrayList;
+
 /**
  *
- * @author jaume
+ * @author PC
  */
 public class Bibliotecario extends Persona{
+    
     private String puestoTrabajo;
     private String nif;
     private String contrasena;
@@ -29,6 +32,13 @@ public class Bibliotecario extends Persona{
         this.setPuestoTrabajo(b1.getPuestoTrabajo());
         this.setNif(b1.getNif());
         this.setContrasena(b1.getContrasena());
+    }
+    
+    public Bibliotecario(Persona p1,String puestoTrabajo, String nif, String contrasena) {
+        super(p1.getNombre(), p1.getApellido1(), p1.getApellido2(), p1.getEdad());
+        this.setPuestoTrabajo(puestoTrabajo);
+        this.setNif(nif);
+        this.setContrasena(contrasena);
     }
 
     public String getPuestoTrabajo() {
@@ -59,6 +69,22 @@ public class Bibliotecario extends Persona{
     public String toString() {
         return "Bibliotecario{" + "puestoTrabajo=" + puestoTrabajo + ", nif=" + nif + ", contrasena=" + contrasena + '}';
     }
+
+    @Override
+    public Bibliotecario solicitarDatosPersona() {
+        Persona p1=super.solicitarDatosPersona();
+        System.out.println("Escribe el puesto de trabajo del bibliotecario");
+        String puestoTrabajo=sc.nextLine();
+        System.out.println("Escribe el nif del bibliotecario");
+        String nif=sc.nextLine();
+        System.out.println("Escribe la contraseña del bibliotecario");
+        String contrasena=sc.nextLine();
+        Bibliotecario b1=new Bibliotecario(p1,puestoTrabajo,nif,contrasena);
+        return b1;
+    }
+
+    
+    
     
     
     

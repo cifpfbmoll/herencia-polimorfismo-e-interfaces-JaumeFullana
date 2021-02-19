@@ -5,6 +5,7 @@
  */
 package cifpfbmoll.fullana.biblioteca2;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.Scanner;
  *
  * @author jaume
  */
-public class Reserva {
+public class Reserva implements Material{
     private Libro libro;
     private String fechaReserva;
     private String horaReserva;
@@ -162,6 +163,34 @@ public class Reserva {
         if (!personaEncontrada){
             System.out.println("Tu telefono o correo no son correctos");
         }
+    }
+
+    @Override
+    public void obtenerFechaDevolucion() {
+        if(this.getLibro() instanceof Libro){/*Esto lo pongo asi teniendo en cuenta que si añadimos videos, revistas....
+            lo agruparemos en una clase padre i usaremos esa clase padre para meter ese objeto en la clase reserva com
+            atributo donde ahora es Libro*/
+            String fechaReserva=this.getFechaReserva();
+            DateTimeFormatter formatoFecha=DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate fechaReservaDate= LocalDate.parse(fechaReserva,formatoFecha);
+            LocalDate fechaDevolucion=fechaReservaDate.plusMonths(1);
+            System.out.println("La fecha de devolucion es: "+fechaDevolucion.format(formatoFecha));
+        }
+    }
+
+    @Override
+    public void mostrarInfoChula() {
+        System.out.println("===============================================================");
+        System.out.println("");
+        System.out.println("Esta reserva fue realizada el dia: "+this.getFechaReserva());
+        System.out.println("La hora en la que se realizo la reserva fue: "+this.getHoraReserva());
+        System.out.println("El libro reservado en esta reserva tiene los siguientes datos");
+        System.out.println("Titulo: "+this.getLibro().getTitulo());
+        System.out.println("Autor: "+this.getLibro().getAutor());
+        System.out.println("Editorial: "+this.getLibro().getEditorial());
+        System.out.println("ISBN: "+this.getLibro().getISBN());
+        System.out.println("");
+        System.out.println("===============================================================");
     }
     
 }

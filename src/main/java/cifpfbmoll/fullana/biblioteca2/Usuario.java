@@ -136,11 +136,11 @@ public class Usuario extends Persona{
 
     
     /**
-     * Metodo para mostrar la Lista de Libros reservados por un usuario concreto.
+     * Metodo para mostrar la Lista de reservas de un usuario concreto.
      */
-    public void mostrarLibrosReservados(){
-        for (int i=0;i<listaReservas.size();i++){
-            System.out.println(listaReservas.get(i).toString());
+    public void mostrarReservas(){
+        for (int i=0;i<this.getListaReservas().size();i++){
+            this.getListaReservas().get(i).mostrarInfoChula();
         }
     }
 

@@ -265,7 +265,7 @@ public class Main {
                     while (i<biblioteca.getListaPersona().size() && !encontrado){
                         if(biblioteca.getListaPersona().get(i) instanceof Usuario){
                             if (((Usuario)biblioteca.getListaPersona().get(i)).getTelefono()==tlfUsuarioActivo){
-                                ((Usuario)biblioteca.getListaPersona().get(i)).mostrarLibrosReservados();
+                                ((Usuario)biblioteca.getListaPersona().get(i)).mostrarReservas();
                                 encontrado=true;
                             }
                         }
@@ -509,7 +509,7 @@ public class Main {
                         if(biblioteca.getListaPersona().get(i) instanceof Usuario){
                             if (((Usuario)biblioteca.getListaPersona().get(i)).getTelefono()==(telefono) && 
                                 ((Usuario)biblioteca.getListaPersona().get(i)).getCorreoElectronico().equals(correo)){
-                                ((Usuario)biblioteca.getListaPersona().get(i)).mostrarLibrosReservados();
+                                ((Usuario)biblioteca.getListaPersona().get(i)).mostrarReservas();
                                 encontrado=true;
                             }
                         }

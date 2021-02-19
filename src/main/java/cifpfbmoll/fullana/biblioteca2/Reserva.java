@@ -189,6 +189,7 @@ public class Reserva implements Material{
         System.out.println("Autor: "+this.getLibro().getAutor());
         System.out.println("Editorial: "+this.getLibro().getEditorial());
         System.out.println("ISBN: "+this.getLibro().getISBN());
+        this.obtenerFechaDevolucion();
         System.out.println("");
         System.out.println("===============================================================");
     }

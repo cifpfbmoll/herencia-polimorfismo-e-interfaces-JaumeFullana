@@ -88,8 +88,10 @@ public class Reserva implements Material{
                                 libroEncontrado=true;
                                 if (listaLibros.get(j).getCopiasDisponibles()>=1){
                                     LocalDateTime fecha= LocalDateTime.now();
+                                    DateTimeFormatter formatoFecha=DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                                    DateTimeFormatter formatoHora=DateTimeFormatter.ofPattern("HH:mm");
                                     Libro l1=new Libro(listaLibros.get(j));
-                                    Reserva r1=new Reserva(l1,fecha.getDayOfMonth()+"/"+fecha.getMonthValue()+"/"+fecha.getYear(),fecha.getHour()+":"+fecha.getMinute());
+                                    Reserva r1=new Reserva(l1,fecha.format(formatoFecha),fecha.format(formatoHora));
                                     ((Usuario)listaPersona.get(i)).getListaReservas().add(r1);
                                     listaLibros.get(j).setCopiasDisponibles(listaLibros.get(j).getCopiasDisponibles()-1, listaLibros.get(j).getNumeroCopias());
                                     ((Usuario)listaPersona.get(i)).setLibrosReservados(((Usuario)listaPersona.get(i)).getLibrosReservados()+1);

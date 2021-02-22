@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author PC
+ * @author Jaume
  */
 public class Bibliotecario extends Persona{
     
@@ -69,7 +69,11 @@ public class Bibliotecario extends Persona{
     public String toString() {
         return "Bibliotecario{" + "puestoTrabajo=" + puestoTrabajo + ", nif=" + nif + ", contrasena=" + contrasena + '}';
     }
-
+    /**
+     * Metodo que sobreescribe el metodo de su clase padre, ademas de pedir los 
+     * datos que ya se piden en el metodo de la clase padre pide otros para asignarlos como
+     * valor a los atributos de la instancia donde se esta ejectuando el metodo.
+     */
     @Override
     public void solicitarDatosPersona() {
         super.solicitarDatosPersona();
@@ -80,7 +84,11 @@ public class Bibliotecario extends Persona{
         System.out.println("Escribe la contraseña del bibliotecario");
         this.setContrasena(sc.nextLine());
     }
-
+    /**
+     * Metodo que sobreescribe le metodo de su clase padre, pide unos datos 
+     * para luego assignarlos al atributo contrasena de la instancia sobre la que
+     * se esta ejecutando.
+     */
     @Override
     public void cambiarContraseña() {
         System.out.println("Introduce tu nueva contraseña");

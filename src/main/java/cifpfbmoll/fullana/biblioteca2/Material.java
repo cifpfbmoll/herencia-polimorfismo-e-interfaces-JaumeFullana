@@ -7,11 +7,17 @@ package cifpfbmoll.fullana.biblioteca2;
 
 /**
  *
- * @author PC
+ * @author Jaume
  */
 public interface Material {
-    
+    /**
+     * Metodo asbtracto creado para que sea usado obligatoriamente en la clases que implementen
+     * la interfaz Material.
+     */
     void obtenerFechaDevolucion();
-    
+    /**
+     * Metodo abstracto creado para que sea usado obligatoriamente en la clases que implementen
+     * la interfaz Material.
+     */
     void mostrarInfoChula();
 }

@@ -71,27 +71,14 @@ public abstract class Persona {
         this.edad = edad;
     }
 
-
-    /**public void setContrasena(String contrasena) {
-        //Comprobacion de que la contraseña del usuario tenga almenos 8 caracteres
-        while (contrasena.length()<8){
-        System.out.println("La contraseña tiene que ser de 8 caracteres minimo");
-        System.out.println("Inserta una nueva contaseña");
-        contrasena=sc.nextLine();
-        }
-        this.contrasena = contrasena;
-    }
-    */
-    //metod para imprimir los valores de un objeto Persona
-
     @Override    
     public String toString (){
         return "Persona{" + "nombre=" + nombre + ", apellido1=" + apellido1 + ", apellido2=" + apellido2 + ", edad=" + edad + '}';
     }
 
-    /** Metodo que crea y añade valores a unas variables.
+    /** Metodo que pide unos datos para luego asignarlos como valor de los atributos
+     * de la instancia en la que se esta ejecutando este metodo.
      * 
-     * @param listaPersona Arraylist donde se guardan los libros de la biblioteca
      */
     public void solicitarDatosPersona(){
         System.out.println("Escribe el nombre del usuario:"); 
@@ -105,10 +92,11 @@ public abstract class Persona {
         sc.nextLine();
     };
     /**
-     * Metodo que busca una Persona por su NIF en la lista listaPersonal de la biblioteca,
-     * que se pasa por parametro, y si lo encuentra lo elimina de la lista.
+     * Metodo que busca una Persona por su nombre y apellidos en la lista 
+     * listaPersonal de la biblioteca, que se pasa por parametro, y si lo 
+     * encuentra lo elimina de la lista.
      * 
-     * @param listaPersona Arraylist donde se guardan los libros de la biblioteca
+     * @param listaPersona Arraylist donde se guardan las Personas de la biblioteca.
      */
     public static void eliminarPersona(ArrayList <Persona> listaPersona){
         System.out.println("Escribe el nombre de la persona");
@@ -131,6 +119,8 @@ public abstract class Persona {
             System.out.println("No existe ninguna persona con ese nombre y apellidos en el sistema");
         }
     }
-    
+    /**
+     * Metodo abstracto creado para que sea implementado obligatoriamente en las clases hijas.
+     */
     public abstract void cambiarContraseña();
 }

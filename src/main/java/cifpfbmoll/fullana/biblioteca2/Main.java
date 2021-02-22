@@ -106,16 +106,16 @@ public class Main {
     }
     /**
      * Metodo de un menu de inicio de sesion para usuarios normales, recibe por parametros un int privilegios para despues ser devuelto
-     * con el valor correspondiente, un String NIFUsuarioActivo que despues sera devuelto tambien con el numero del usuario que haya logeado y
-     * un objeto Biblioteca del cual se usa el atributo listaUsuarios, que es un ArrayList de Usuarios, para ver si existe 
-     * un Usuario con ese NIF y luego comprobar si la contraseña introducida es la correcta(una vez comprobado,
+     * con el valor correspondiente, un int tlfUsuarioActivo que despues sera devuelto tambien con el numero del usuario que haya logeado y
+     * un objeto Biblioteca del cual se usa el atributo listaPersona, que es un ArrayList de Persona, para ver si existe 
+     * un Usuario con ese telefono y luego comprobar si el correo introducido es el correcto(una vez comprobado,
      * y si es correcto, devuelve 1, si es incorrecto se sigue ejecutando hasta que el usuario quiere, cuando no quiere, si sigue
      * siendo incorrecto, devuelve 9).
      * 
      * @param biblioteca Objeto de la clase Biblioteca.
      * @param privilegios int que hace referencia a que puede hacer el usuario conectado(administrador o usuario normal).
-     * @param tlfUsuarioActivo String que es el NIF del usuario que esta en la sesion actualmente.
-     * @return listaInicioSesion Array creada para poder almacenar y devolver el int privilegios y el String NIFUsuarioActivo.
+     * @param tlfUsuarioActivo int que es el telefono del usuario que esta en la sesion actualmente.
+     * @return listaInicioSesion Array creada para poder almacenar y devolver el int privilegios y el int tlfUsuarioActivo.
      */
     public static int[] menuInicioSesionUsuario(Biblioteca biblioteca, int privilegios, int tlfUsuarioActivo){
         System.out.println("Inserta tu telefono");
@@ -157,15 +157,16 @@ public class Main {
     }
     
     /**
-     * Metodo de un menu de inicio de sesion para administradores, recibe por parametros un int privilegios para despues ser devuelto y
-     * un objeto Biblioteca del cual se usa el atributo listaPersonal, que es un ArrayList de personas, para ver si existe 
-     * un administrador(Persona ) con ese NIF y luego comprobar si la contraseña introducida es la correcta(una vez comprobado,
-     * y si es correcto, devuelve 1, si es incorrecto se sigue ejecutando hasta que el usuario quiere, cuando no quiere, si sigue
-     * siendo incorrecto, devuelve 9).
+     * Metodo de un menu de inicio de sesion para administradores, recibe por parametros un int privilegios para despues ser devuelto,
+     * un String nifBibliotecarioActivo para devolver el nif del bibliotecario que logea y un objeto Biblioteca del cual se usa 
+     * el atributo listaPersona, que es un ArrayList de Personas, para ver si existe un bibliotecario(Persona ) con ese NIF y 
+     * luego comprobar si la contraseña introducida es la correcta(una vez comprobado, y si es correcto, devuelve 1, si es incorrecto 
+     * se sigue ejecutando hasta que el usuario quiere, cuando no quiere, si sigue siendo incorrecto, devuelve 9).
      * 
      * @param biblioteca Objeto de la clase Biblioteca.
      * @param privilegios int que hace referencia a que puede hacer el usuario conectado(administrador o usuario normal).
-     * @return privilegios int que hace referencia a que puede hacer el usuario conectado(administrador o usuario normal).
+     * @param nifBibliotecarioActivo String que servira para alamacenar el NIF del bibliotecario que entre a la sesion.
+     * @return listaInicioSesion Array creada para poder almacenar y devolver el int privilegios y el int nifBibliotecarioActivo.
      */
     public static String [] menuInicioSesionAdministrador(Biblioteca biblioteca, int privilegios, String nifBibliotecarioActivo) {
         System.out.println("Inserta tu NIF");
@@ -206,14 +207,14 @@ public class Main {
         return listaInicioSesion;
     }
     /**
-     * Metodo de un menu de las diferentes opcion de un Usuario de la biblioteca, recibe por parametro un int
+     * Metodo de un menu de las diferentes opciones de un Usuario de la biblioteca, recibe por parametro un int
      * privilegios para poder entrar en el bucle, el objeto biblioteca de la clase Biblioteca para poder entrar
-     * en su instancia con los diferentes metodos y la String NIFUsuarioActivo para poder saber que usuario es
+     * en su instancia con los diferentes metodos y el int tlfUsuarioActivo para poder saber que usuario es
      * el que esta en la sesion (Devuelve un int privilegios).
      * 
      * @param privilegios int que hace referencia a que puede hacer el usuario conectado(administrador o usuario normal).
      * @param biblioteca Objeto de la clase Biblioteca.
-     * @param tlfUsuarioActivo String que es el NIF del usuario que esta en la sesion actualmente.
+     * @param tlfUsuarioActivo int que es el telefono del usuario que esta en la sesion actualmente.
      * @return privilegios int que hace referencia a que puede hacer el usuario conectado(administrador o usuario normal).
      */
     public static int menuUsuario(int privilegios, Biblioteca biblioteca, int tlfUsuarioActivo) {
@@ -303,11 +304,13 @@ public class Main {
     }
     /**
      * Metodo de un menu para administradores para entrar a los diferentes gestores de la biblioteca, recibe por parametro un int
-     * privilegios para poder entrar en el bucle y el objeto biblioteca de la clase Biblioteca para poder poder pasarlo
-     * por parametro a otras funciones(Devuelve un int privilegios).
+     * privilegios para poder entrar en el bucle, el objeto biblioteca de la clase Biblioteca para poder poder pasarlo
+     * por parametro a otras funciones y el String nifBibliotecarioActivo para tambien usarlo en otros metodos dentro de este
+     * (El metodo devuelve un int privilegios).
      * 
      * @param privilegios int que hace referencia a que puede hacer el usuario conectado(administrador o usuario normal).
      * @param biblioteca Objeto de la clase Biblioteca.
+     * @param nifBibliotecarioActivo String donde se ha guardado el nif del bibliotecario que esta logeado actualmente.
      * @return privilegios int que hace referencia a que puede hacer el usuario conectado(administrador o usuario normal).
      */
     public static int menuAdministrador(int privilegios, Biblioteca biblioteca, String nifBibliotecarioActivo) {
@@ -412,15 +415,27 @@ public class Main {
     }
     
     /**
-     * Metodo x.
+     * Metodo que recibe por parametro un objeto de la clase Biblioteca para luego
+     * crear un objeto de la clase Bibliotecario, añadirle valores a sus atributos 
+     * y añadir al bibliotecario en la ArrayList de Personas listaPersona que obtenemos
+     * del objeto que hemos pasado por parametro.
+     * 
+     * @param biblioteca objeto de la clase Biblioteca del cual obtendremos la ListaPersona.
      */
-    
     public static void crearBibliotecario(Biblioteca biblioteca){
         Bibliotecario b1=new Bibliotecario();
         b1.solicitarDatosPersona();
         biblioteca.getListaPersona().add(b1);
     }
     
+    /**
+     * Metodo que recibe por parametro un objeto de la clase Biblioteca para luego
+     * crear un objeto de la clase Usuario, añadirle valores a sus atributos 
+     * y añadir al Usuario en la ArrayList de Personas listaPersona que obtenemos
+     * del objeto que hemos pasado por parametro.
+     * 
+     * @param biblioteca objeto de la clase Biblioteca del cual obtendremos la ListaPersona.
+     */
     public static void crearUsuario(Biblioteca biblioteca){
         Usuario u1=new Usuario();
         u1.solicitarDatosPersona();

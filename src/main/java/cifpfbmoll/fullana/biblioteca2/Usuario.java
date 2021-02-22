@@ -114,10 +114,9 @@ public class Usuario extends Persona{
     }
 
     /**
-     * Metodo para crear un nuevo Usuario con valores en todos sus atributos, se le
-     * pasa una lista de Usuarios por parametro para añadir el usuario creado en ella.
-     * 
-     * @param listaUsuario ArrayList en la que se guarda el usuario creado.
+     * Metodo que sobreescribe el metodo de su clase padre, ademas de pedir los 
+     * datos que ya se piden en el metodo de la clase padre pide otros para asignarlos como
+     * valor a los atributos de la instancia donde se esta ejectuando el metodo.
      */
     @Override
     public void solicitarDatosPersona(){
@@ -143,7 +142,11 @@ public class Usuario extends Persona{
             this.getListaReservas().get(i).mostrarInfoChula();
         }
     }
-
+    /**
+     * Metodo que sobreescribe le metodo de su clase padre, pide unos datos 
+     * para luego assignarlos al atributo correo de la instancia sobre la que
+     * se esta ejecutando.
+     */
     @Override
     public void cambiarContraseña() {
         System.out.println("Introduce tu nuevo correo electronico que funciona como contraseña");

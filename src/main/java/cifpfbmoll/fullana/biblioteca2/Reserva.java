@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 /**
  *
- * @author jaume
+ * @author Jaume
  */
 public class Reserva implements Material{
     private Libro libro;
@@ -63,7 +63,19 @@ public class Reserva implements Material{
     public String toString() {
         return "Reserva{" + "libro=" + libro.ReservasToString() + ", fechaReserva=" + fechaReserva + ", horaReserva=" + horaReserva + '}';
     }
-    
+    /**
+     * Metodo que recibe por parametro una ArrayList de Persona y una ArrayList de Libro las cuales seran
+     * utilizadas para reservar uno de los libros de la lista para una persona de la lista. Se pedira el
+     * telefono y el correo de la persona para la que queremos reservar un libro, buscaremos si esos datos
+     * coinciden con algun usuario de la ArrayList de Personas, en caso de que coincidan pediremos la ISBN
+     * del libro que se quiere reservar y lo buscaremos en la ArrayList de Libros. Si esa ISBN se encuentra
+     * en la lista pasaremos a crear la reserva con ese libro y la fecha actual. Se modifican todos los atributos
+     * relazionados con la reserva: se resta un libro a copias disponibles, se suma 1 libro a librosReservados por
+     * el usuario,...
+     * 
+     * @param listaPersona ArrayList de Personas donde se bascara el usuario que quiere reservar el libro.
+     * @param listaLibros ArrayList de libros donde buscaremos el libro que se quiere reservar.
+     */
     public static void reservarLibro(ArrayList <Persona> listaPersona, ArrayList <Libro> listaLibros){
         System.out.println("Inserta el telefono del usuario para el que va a reservar el libro");
         int telefono=sc.nextInt();
@@ -118,8 +130,20 @@ public class Reserva implements Material{
             System.out.println("Tu telefono o correo no son correctos");
         }
     }
-    
-        public static void devolverLibro(ArrayList <Persona> listaPersona, ArrayList <Libro> listaLibros){
+    /**
+     * Metodo que recibe por parametro una ArrayList de Persona y una ArrayList de Libro las cuales seran
+     * utilizadas para devolver uno de los libros reservados por una persona de la lista a la biblioteca. Se pedira el
+     * telefono y el correo de la persona para la que vamos a devolver un libro, buscaremos si esos datos
+     * coinciden con algun usuario de la ArrayList de Personas, en caso de que coincidan pediremos la ISBN
+     * del libro que se quiere devolver y lo buscaremos en la ArrayList de Reservas del Usuario. Si esa ISBN se encuentra
+     * en la lista pasaremos a devolver el libro y eliminar la reserva. Se modifican todos los atributos
+     * relazionados con la reserva: se suma un libro a copias disponibles, se resta 1 libro a librosReservados por
+     * el usuario,...
+     * 
+     * @param listaPersona ArrayList de Personas donde se bascara el usuario que quiere devolver el libro.
+     * @param listaLibros ArrayList de libros donde actualizaremos la copias del libro devuelto.
+     */
+    public static void devolverLibro(ArrayList <Persona> listaPersona, ArrayList <Libro> listaLibros){
         System.out.println("Inserta el telefono del usuario para el que va a devolver el libro");
         int telefono=sc.nextInt();
         sc.nextLine();
@@ -166,7 +190,13 @@ public class Reserva implements Material{
             System.out.println("Tu telefono o correo no son correctos");
         }
     }
-
+    /**
+     * Metodo que sobreeescribe el metodo de la interfaz Material implementada en esta clase,
+     * hacemos una comprobacion para saber de que clase es el Material(ahora siempre es Libro. Al ver
+     * la clase de ese Material le sumamos al atributo fechaReserva de ese objeto el tiempo
+     * assignado para que se cumpla el tiempo de reserva y asi saber la fecha de devolucion.
+     * 
+     */
     @Override
     public void obtenerFechaDevolucion() {
         if(this.getLibro() instanceof Libro){/*Esto lo pongo asi teniendo en cuenta que si añadimos videos, revistas....
@@ -179,7 +209,10 @@ public class Reserva implements Material{
             System.out.println("La fecha de devolucion es: "+fechaDevolucion.format(formatoFecha));
         }
     }
-
+    /**
+     * Metodo creado para imprimir de forma mas clara los datos de una reserva. Tambien
+     * se usa el metodo obtenerFechaDevolucion para saber la fecha de devolucion.
+     */
     @Override
     public void mostrarInfoChula() {
         System.out.println("===============================================================");

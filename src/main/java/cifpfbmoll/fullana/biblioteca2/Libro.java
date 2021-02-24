@@ -221,5 +221,125 @@ public class Libro {
         if (!encontrado){
             System.out.println("No hay ningun libro que contenga o tenga el titulo especificado");
         }
-    }   
+    }
+    /**
+     * Metodo que pide la ISBN de un libro para buscarlo en la biblioteca y, si lo encuentra,
+     * hacer una copia de el de los datos que se quieran y meterlo en la listaLibros de la biblioteca. 
+     * La ISBN no se puede copiar ya que tiene que ser unica.
+     * 
+     * @param biblioteca objeto de la clase Biblioteca.
+     */
+    public static void añadirLibroCopia(Biblioteca biblioteca){
+        System.out.println("Dame la ISBN del libro que quieres copiar");
+        String ISBN=sc.nextLine();
+        boolean encontrado=false;
+        int i=0;
+        while (i<biblioteca.getListaLibros().size() && !encontrado){
+            if (biblioteca.getListaLibros().get(i).getISBN().equals(ISBN)){
+                encontrado=true;
+                Libro l1=new Libro(biblioteca.getListaLibros().get(i));
+                /*Se copia numeroCopias y copiasDisponibles a traves del setter ya que en
+                el constructor copia que he realizado no se copian estos datos
+                */ 
+                l1.setNumeroCopias(biblioteca.getListaLibros().get(i).getNumeroCopias());
+                l1.setCopiasDisponibles(biblioteca.getListaLibros().get(i).getCopiasDisponibles(),
+                biblioteca.getListaLibros().get(i).getNumeroCopias());
+                System.out.println("La ISBN no puede ser la misma que la del libro que estas copiando");
+                System.out.println("las ISBN son unicas, escribe la ISBN de este nuevo libro");
+                String ISBNl1=sc.nextLine();
+                l1.setISBN(ISBNl1);
+                System.out.println("nueva ISBN asignada.");
+                System.out.println("");
+                opcionesCopiado(l1);
+                biblioteca.getListaLibros().add(l1);
+                contadorLibros++;
+                System.out.println("El libro ha sido creado como usted ha indicado!");
+            }
+            i++;
+        }
+        if (!encontrado){
+            System.out.println("No existe ningun libro con esa ISBN en esta biblioteca");
+        }
+    }
+    /**
+     * Metodo que recibe por parametro un libro y modifica sus atributos se quiere.
+     * 
+     * @param l1 Libro en el que se modificaran, o no, los datos de sus atributos.
+     */
+    private static void opcionesCopiado(Libro l1) {
+        System.out.println("Pulsa 1 si quieres copiar el titulo, cualquier otro numero si quieres asignarlo tu");
+        int opcion=sc.nextInt();
+        sc.nextLine();
+        if (opcion!=1){
+            System.out.println("Dame el nuevo titulo de este libro:");
+            String titulo=sc.nextLine();
+            l1.setTitulo(titulo);
+            System.out.println("Hecho!");
+            System.out.println("");
+        }
+        else{
+            System.out.println("Copiado");
+            System.out.println("");
+        }
+        System.out.println("Pulsa 1 si quieres copiar el autor, cualquier otro numero si quieres asignarlo tu");
+        opcion=sc.nextInt();
+        sc.nextLine();
+        if (opcion!=1){
+            System.out.println("Dame el nuevo autor de este libro:");
+            String autor=sc.nextLine();
+            l1.setAutor(autor);
+            System.out.println("Hecho!");
+            System.out.println("");
+        }
+        else{
+            System.out.println("Copiado");
+            System.out.println("");
+        }
+        System.out.println("Pulsa 1 si quieres copiar la editorial, cualquier otro numero si quieres asignarlo tu");
+        opcion=sc.nextInt();
+        sc.nextLine();
+        if (opcion!=1){
+            System.out.println("Dame la nueva editorial de este libro:");
+            String editorial=sc.nextLine();
+            l1.setEditorial(editorial);
+            System.out.println("Hecho!");
+            System.out.println("");
+        }
+        else{
+            System.out.println("Copiado");
+            System.out.println("");
+        }
+        System.out.println("Pulsa 1 si quieres copiar el numero de copias, cualquier otro numero si quieres asignarlo tu");
+        opcion=sc.nextInt();
+        sc.nextLine();
+        if (opcion!=1){
+            System.out.println("Dame el nuevo numero de copias de este libro:");
+            int numeroCopias=sc.nextInt();
+            sc.nextLine();
+            l1.setNumeroCopias(numeroCopias);
+            System.out.println("Hecho!");
+            System.out.println("");
+        }
+        else{
+            System.out.println("Copiado");
+            System.out.println("");
+        }
+        System.out.println("Pulsa 1 si quieres copiar el numero de copias disponibles,"
+                + " cualquier otro numero si quieres asignarlo tu");
+        opcion=sc.nextInt();
+        sc.nextLine();
+        if (opcion!=1){
+            System.out.println("Dame el nuevo numero de copias disponibles de este libro:");
+            int numeroCopiasDisponibles=sc.nextInt();
+            sc.nextLine();
+            l1.setCopiasDisponibles(numeroCopiasDisponibles,l1.getNumeroCopias());
+            System.out.println("Hecho!");
+            System.out.println("");
+        }
+        else{
+            System.out.println("Copiado");
+            System.out.println("");
+        }
+    }
+    
 }

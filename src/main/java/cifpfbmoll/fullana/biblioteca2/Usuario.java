@@ -112,6 +112,10 @@ public class Usuario extends Persona{
     public String toString (){
         return super.toString()+"Usuario{" + "telefono=" + telefono + ", direccion=" + direccion + ", codigoPostal=" + codigoPostal + ", correoElectronico=" + correoElectronico + ", listaReservas=" + listaReservas + ", librosReservados=" + librosReservados + '}';
     }
+    
+    public String toStringCorta(){
+        return super.toString();
+    }
 
     /**
      * Metodo que sobreescribe el metodo de su clase padre, ademas de pedir los 

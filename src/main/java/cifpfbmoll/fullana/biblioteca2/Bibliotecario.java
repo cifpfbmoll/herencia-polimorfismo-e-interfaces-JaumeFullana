@@ -62,6 +62,11 @@ public class Bibliotecario extends Persona{
     }
 
     public void setContrasena(String contrasena) {
+        while (contrasena.length()<8){
+            System.out.println("La contraseña tiene que ser de 8 caracteres minimo");
+            System.out.println("Inserta una nueva contaseña");
+            contrasena=sc.nextLine();
+        }
         this.contrasena = contrasena;
     }
 

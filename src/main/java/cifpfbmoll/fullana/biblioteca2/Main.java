@@ -19,7 +19,10 @@ public class Main {
      * diferentes clases del programa, ademas de la creacion de la biblioteca en el principio del programa.
      */
     public static void main(String[] args) {
-        Biblioteca biblioteca=crearBiblioteca();
+        RedBiblioteca redBibliotecas=new RedBiblioteca();
+        System.out.println("Bienvenido al programa de gestion de bibliotecas.");
+        System.out.println("Creemos la primera biblioteca");
+        Biblioteca biblioteca=Biblioteca.añadirBiblioteca(redBibliotecas.getListaBibliotecas());
         crearPrimerAdministrador(biblioteca);
         int privilegios=1;
         int opcionSesion;
@@ -27,37 +30,99 @@ public class Main {
         int [] listaInicioSesion2;
         int tlfUsuarioActivo=0;
         String nifBibliotecarioActivo=((Bibliotecario)biblioteca.getListaPersona().get(0)).getNif();
+        boolean salir=false;
         //bucle para poder realizar acciones hasta que se desee
-        while (privilegios!=0){
-            if (privilegios==1){
-                privilegios = menuAdministrador(privilegios, biblioteca, nifBibliotecarioActivo);
+        while (!salir) {
+            while (privilegios!=0){
+                if (privilegios==1){
+                    privilegios = menuAdministrador(privilegios, biblioteca, nifBibliotecarioActivo);
+                }
+                else if (privilegios==2){
+                    privilegios = menuUsuario(privilegios, biblioteca, tlfUsuarioActivo);
+                }
+                //Opciones de inicio de sesion o para salir del programa
+                opcionSesion = opcionesInicioSesion(biblioteca);
+                //inicio de sesion de administrador
+                if (opcionSesion==1){
+                    listaInicioSesion1 = menuInicioSesionAdministrador(biblioteca, privilegios, nifBibliotecarioActivo);
+                    privilegios=Integer.parseInt(listaInicioSesion1[0]);
+                    nifBibliotecarioActivo=listaInicioSesion1[1];
+                } 
+                //inicio de sesion de usuario
+                else if(opcionSesion==2){
+                    listaInicioSesion2 = menuInicioSesionUsuario(biblioteca, privilegios, tlfUsuarioActivo);
+                    privilegios=listaInicioSesion2[0];
+                    tlfUsuarioActivo=listaInicioSesion2[1];
+
+                } 
+                else if (opcionSesion==0){
+                    System.out.println("ADIOS!");
+                    privilegios=0;
+                } 
+                else{
+                    System.out.println("ERROR: Esta opcion no existe");
+                    privilegios=9;
+                }
             }
-            else if (privilegios==2){
-                privilegios = menuUsuario(privilegios, biblioteca, tlfUsuarioActivo);
-            }
-            //Opciones de inicio de sesion o para salir del programa
-            opcionSesion = opcionesInicioSesion();
-            //inicio de sesion de administrador
-            if (opcionSesion==1){
-                listaInicioSesion1 = menuInicioSesionAdministrador(biblioteca, privilegios, nifBibliotecarioActivo);
-                privilegios=Integer.parseInt(listaInicioSesion1[0]);
-                nifBibliotecarioActivo=listaInicioSesion1[1];
-            } 
-            //inicio de sesion de usuario
-            else if(opcionSesion==2){
-                listaInicioSesion2 = menuInicioSesionUsuario(biblioteca, privilegios, tlfUsuarioActivo);
-                privilegios=listaInicioSesion2[0];
-                tlfUsuarioActivo=listaInicioSesion2[1];
+            System.out.println("MENU DE GESTION DE LAS BIBLIOTECAS");
+            System.out.println("Pulsa 1 para crear una nueva biblioteca");
+            System.out.println("Pulsa 2 para eliminar una biblioteca");
+            System.out.println("Pulsa 3 para ver todas las bibliotecas");
+            System.out.println("Pulsa 4 para entrar al gestor de una de las bibliotecas");
+            System.out.println("Pulsa 5 para buscar informacion de un libro en todas las bibliotecas");
+            System.out.println("Pulsa 0 para salir del programa");
+            int opcionBiblioteca=sc.nextInt();
+            sc.nextLine();
+            switch (opcionBiblioteca){
                 
-            } 
-            else if (opcionSesion==0){
-                System.out.println("ADIOS!");
-                privilegios=0;
-            } 
-            else{
-                System.out.println("ERROR: Esta opcion no existe");
-                privilegios=9;
+                case 1:
+                    Biblioteca nuevaBiblioteca=Biblioteca.añadirBiblioteca(redBibliotecas.getListaBibliotecas());
+                    crearPrimerAdministrador(nuevaBiblioteca);
+                    break;
+                    
+                case 2:
+                    Biblioteca.eliminarBiblioteca(redBibliotecas.getListaBibliotecas());
+                    break;
+                
+                case 3:
+                    Biblioteca.consultarBibliotecas(redBibliotecas.getListaBibliotecas());
+                    break;
+                    
+                case 4:
+                    System.out.println("Dime el nombre de la biblioteca a la que quieres entrar");
+                    String nombre=sc.nextLine();
+                    boolean encontrado=false;
+                    int i=0;
+                    while (i<redBibliotecas.getListaBibliotecas().size() && !encontrado){
+                        if (redBibliotecas.getListaBibliotecas().get(i).getNombreBiblioteca().equals(nombre)){
+                            encontrado=true;
+                            biblioteca=redBibliotecas.getListaBibliotecas().get(i);
+                            privilegios=9;
+                        }
+                        i++;
+                    }
+                    if (!encontrado){
+                        System.out.println("No existe ninguna biblioteca con ese nombre en nuesta red");
+                    }
+                    break;
+                    
+                case 5:
+                    redBibliotecas.buscarLibroBibliotecas();
+                    break;
+                    
+                case 0:
+                    System.out.println("ADIOS!");
+                    salir=true;
+                    break;
+                    
+                default:
+                    System.out.println("ERROR: Este comando no existe");
+                    System.out.println("Inserta un comando que exista");
+                    System.out.println("");
+                    
             }
+            System.out.println("Pulsa enter para continuar");
+            sc.nextLine();
         }
     }
     /**
@@ -66,43 +131,27 @@ public class Main {
      * 
      * @return opcionSesion int que indica la opcion que ha elegido el usuario para iniciar sesion
      */
-    public static int opcionesInicioSesion() {
+    public static int opcionesInicioSesion(Biblioteca biblioteca) {
         int opcionSesion;
-        System.out.println("MENU DE INICIO DE SESION");
+        System.out.println("MENU DE INICIO DE SESION DE LA BIBLIOTECA "+biblioteca.getNombreBiblioteca());
         System.out.println("Inserta 1 para inciar sesion si eres parte del personal");
         System.out.println("Inserta 2 para iniciar sesion si eres un usuario de la biblioteca");
-        System.out.println("Inserta 0 para salir del programa");
+        System.out.println("Inserta 0 para salir del gestor de esta biblioteca");
         opcionSesion=sc.nextInt();
         sc.nextLine();
         return opcionSesion;
     }
     /**
-     * Metodo que se ejecuta siempre cuando se inicia el programa justo despues de
-     * crearse la biblioteca, sirve para crear el primer administrador de la biblioteca
+     * Metodo que se ejecuta siempre cuando se crea una biblioteca, sirve para crear el primer administrador de la biblioteca
      * (Accion que es llevada a cabo a traves de otro metodo el cual es llamado en este metodo)
      * 
      * @param biblioteca Objeto de la clase biblioteca del cual se coge el atributo ArrayList listaPersonal 
      * para guardar al primer administrador(Persona) de la biblioteca.
      */
     public static void crearPrimerAdministrador(Biblioteca biblioteca) {
-        System.out.println("Bienvenido al gestor de la bilioteca "+biblioteca.getNombreBiblioteca());
-        System.out.println("Ahora pasemos a crear un usuario para gestionar la biblioteca");
+        System.out.println("Ahora pasemos a crear un usuario para gestionar esta biblioteca");
         crearBibliotecario(biblioteca);
         System.out.println("Bienvenido "+biblioteca.getListaPersona().get(0).getNombre()+"!");
-    }
-    /**
-     * Metodo que sirve para crear la biblioteca, pide su nombre y lo pasa por parametro
-     * al constructor de la clase Biblioteca, devuelve el objeto Biblioteca creado.
-     * 
-     * @return biblioteca Objeto de la clase Biblioteca
-     */
-    public static Biblioteca crearBiblioteca() {
-        //Menu del programa
-        System.out.println("Bienvenido al programa de gestion de bibliotecas.");
-        System.out.println("Escribe el nombre de la biblioteca");
-        String nombreBiblioteca=sc.nextLine();
-        Biblioteca biblioteca=new Biblioteca(nombreBiblioteca);
-        return biblioteca;
     }
     /**
      * Metodo de un menu de inicio de sesion para usuarios normales, recibe por parametros un int privilegios para despues ser devuelto
@@ -464,6 +513,8 @@ public class Main {
             System.out.println("Pulsa 7 para reservar un libro para un usuario de la biblioteca");
             System.out.println("Pulsa 8 para devolver un libro de un usuario a la biblioteca");
             System.out.println("Pulsa 9 para ver los libros reservados de un usuario de la biblioteca");
+            System.out.println("Pulsa 10 para ver informacion sobre las reservas de un libro");
+            System.out.println("Pulsa 11 para copiar un libro de la biblioteca, cambiando solo los datos que desees");
             System.out.println("Pulsa 0 volver al selector de gestores");
             opcionGestor=sc.nextInt();
             sc.nextLine();
@@ -479,9 +530,9 @@ public class Main {
                     
                 case 3:
                     int posicion=Libro.buscarLibroISBN(biblioteca.getListaLibros());
-                    /** interpreta el valor que se devuelve del metodo, siendo este
-                     * la posicion de la lista en la que se encuentra el Libro o siendo -1
-                     * si no se encuentra en ella.
+                    /* interpreta el valor que se devuelve del metodo, siendo este
+                      la posicion de la lista en la que se encuentra el Libro o siendo -1
+                      si no se encuentra en ella.
                      */
                     if (posicion==-1){
                         System.out.println("No tenemos ningun libro con esa ISBN");
@@ -533,6 +584,14 @@ public class Main {
                     if(!encontrado){
                         System.out.println("No existe ningun usuario de la biblioteca que tenga ese telefono y ese correo electronico, hay algun error");
                     }
+                    break;
+                
+                case 10:
+                    biblioteca.buscarLibroBiblioteca();
+                    break;
+                    
+                case 11:
+                    Libro.añadirLibroCopia(biblioteca);
                     break;
                     
                 case 0:

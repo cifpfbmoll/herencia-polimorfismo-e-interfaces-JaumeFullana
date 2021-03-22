@@ -132,20 +132,26 @@ public class Biblioteca {
      * Bibliotecas de nuestro programa.
      */
     public static void eliminarBiblioteca(ArrayList <Biblioteca> listaBibliotecas) {
-        System.out.println("Dame el nombre de la biblioteca que quieras eliminar");
-        String nombre=sc.nextLine();
-        boolean encontrado=false;
-        int i=0;
-        while (i<listaBibliotecas.size() && !encontrado){
-            if (listaBibliotecas.get(i).getNombreBiblioteca().equals(nombre)){
-                encontrado=true;
-                listaBibliotecas.remove(i);
-                System.out.println("Biblioteca eliminada");
+        //Excepcion que ocurre en el metodo y se trata en el metodo
+        try{
+            System.out.println("Dame el nombre de la biblioteca que quieras eliminar");
+            String nombre=sc.nextLine();
+            boolean encontrado=false;
+            int i=0;
+            while (i<listaBibliotecas.size() && !encontrado){
+                if (listaBibliotecas.get(i).getNombreBiblioteca().equals(nombre)){
+                    encontrado=true;
+                    listaBibliotecas.remove(i);
+                    System.out.println("Biblioteca eliminada");
+                }
+                i++;
             }
-            i++;
+            if(!encontrado){
+                throw new Excepciones(4);
+            }
         }
-        if(!encontrado){
-            System.out.println("No existe ninguna biblioteca con ese nombre en nuestros registros");
+        catch(Excepciones e1){
+            System.out.println(e1.getMessage());
         }
     }
     /**

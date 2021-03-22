@@ -5,7 +5,9 @@
  */
 package cifpfbmoll.fullana.biblioteca2;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 /**
  *
@@ -18,14 +20,14 @@ public class Main {
      * metodo main del programa, en el se incluyen bucles y switch que llaman a los diferentes modulos de las 
      * diferentes clases del programa, ademas de la creacion de la biblioteca en el principio del programa.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InputMismatchException, Excepciones{
         RedBiblioteca redBibliotecas=new RedBiblioteca();
         System.out.println("Bienvenido al programa de gestion de bibliotecas.");
         System.out.println("Creemos la primera biblioteca");
         Biblioteca biblioteca=Biblioteca.añadirBiblioteca(redBibliotecas.getListaBibliotecas());
         crearPrimerAdministrador(biblioteca);
         int privilegios=1;
-        int opcionSesion;
+        int opcionSesion=-1;
         String [] listaInicioSesion1;
         int [] listaInicioSesion2;
         int tlfUsuarioActivo=0;
@@ -41,7 +43,18 @@ public class Main {
                     privilegios = menuUsuario(privilegios, biblioteca, tlfUsuarioActivo);
                 }
                 //Opciones de inicio de sesion o para salir del programa
-                opcionSesion = opcionesInicioSesion(biblioteca);
+                boolean correcto=false;
+                while(!correcto){
+                    //Excepcion ya definida que ocurre en otro metodo y se trata en el main
+                    try{
+                        opcionSesion = opcionesInicioSesion(biblioteca);
+                        correcto=true;
+                    }
+                    catch(InputMismatchException excepcion){
+                        System.out.println("ERROR: Error en los datos insertados, porfavor inserta los datos correctos");
+                        sc.nextLine();
+                    }
+                }
                 //inicio de sesion de administrador
                 if (opcionSesion==1){
                     listaInicioSesion1 = menuInicioSesionAdministrador(biblioteca, privilegios, nifBibliotecarioActivo);
@@ -71,8 +84,9 @@ public class Main {
             System.out.println("Pulsa 4 para entrar al gestor de una de las bibliotecas");
             System.out.println("Pulsa 5 para buscar informacion de un libro en todas las bibliotecas");
             System.out.println("Pulsa 0 para salir del programa");
-            int opcionBiblioteca=sc.nextInt();
-            sc.nextLine();
+            //Excepcion del main que se trata en el main(aunque el tratamento se haga a traves de un metodo, para ahorrar codigo)
+            int opcionBiblioteca=Excepciones.comprobarInt(sc);
+            opcionBiblioteca=Excepciones.comprobarIntRango(opcionBiblioteca, 5, 0);
             switch (opcionBiblioteca){
                 
                 case 1:
@@ -89,20 +103,26 @@ public class Main {
                     break;
                     
                 case 4:
-                    System.out.println("Dime el nombre de la biblioteca a la que quieres entrar");
-                    String nombre=sc.nextLine();
-                    boolean encontrado=false;
-                    int i=0;
-                    while (i<redBibliotecas.getListaBibliotecas().size() && !encontrado){
-                        if (redBibliotecas.getListaBibliotecas().get(i).getNombreBiblioteca().equals(nombre)){
-                            encontrado=true;
-                            biblioteca=redBibliotecas.getListaBibliotecas().get(i);
-                            privilegios=9;
+                    //Excepcion que ocurre y se trata en el main
+                    try{
+                        System.out.println("Dime el nombre de la biblioteca a la que quieres entrar");
+                        String nombre=sc.nextLine();
+                        boolean encontrado=false;
+                        int i=0;
+                        while (i<redBibliotecas.getListaBibliotecas().size() && !encontrado){
+                            if (redBibliotecas.getListaBibliotecas().get(i).getNombreBiblioteca().equals(nombre)){
+                                encontrado=true;
+                                biblioteca=redBibliotecas.getListaBibliotecas().get(i);
+                                privilegios=9;
+                            }
+                            i++;
                         }
-                        i++;
+                        if (!encontrado){
+                            throw new Excepciones(4);
+                        }
                     }
-                    if (!encontrado){
-                        System.out.println("No existe ninguna biblioteca con ese nombre en nuesta red");
+                    catch(Excepciones e1){
+                        System.out.println(e1.getMessage());
                     }
                     break;
                     
@@ -239,7 +259,8 @@ public class Main {
                         }
 
                     }
-                    if(((Bibliotecario)biblioteca.getListaPersona().get(i)).getNif().equals(NIF) && ((Bibliotecario)biblioteca.getListaPersona().get(i)).getContrasena().equals(contrasena)){
+                    if(((Bibliotecario)biblioteca.getListaPersona().get(i)).getNif().equals(NIF) && 
+                    ((Bibliotecario)biblioteca.getListaPersona().get(i)).getContrasena().equals(contrasena)){
                         privilegios=1;
                         nifBibliotecarioActivo=NIF;
                         System.out.println("Bienvenido "+biblioteca.getListaPersona().get(i).getNombre());
@@ -362,7 +383,7 @@ public class Main {
      * @param nifBibliotecarioActivo String donde se ha guardado el nif del bibliotecario que esta logeado actualmente.
      * @return privilegios int que hace referencia a que puede hacer el usuario conectado(administrador o usuario normal).
      */
-    public static int menuAdministrador(int privilegios, Biblioteca biblioteca, String nifBibliotecarioActivo) {
+    public static int menuAdministrador(int privilegios, Biblioteca biblioteca, String nifBibliotecarioActivo) throws Excepciones {
         int opcion;
         //while de interfaz de empleado
         while (privilegios==1){
@@ -371,18 +392,9 @@ public class Main {
             System.out.println("Pulsa 2 si deseas acceder al gestor de personas");
             System.out.println("Pulsa 3 si deseas cambiar tu contraseña");
             System.out.println("Pulsa 0 para salir de la sesion");
-            opcion=sc.nextInt();
-            sc.nextLine();
-            //comprobacion de error
-            while (opcion>3 || opcion<0){
-                System.out.println("ERROR: esa opcion no existe.");
-                System.out.println("Pulsa 1 si deseas acceder al gestor de libros");
-                System.out.println("Pulsa 2 si deseas acceder al gestor de personas");
-                System.out.println("Pulsa 3 si deseas cambiar tu contraseña");
-                System.out.println("Pulsa 0 para salir de la sesion");
-                opcion=sc.nextInt();
-                sc.nextLine();
-            }
+            //Excepcion que se comprueba en el mismo metodo donde ocurre
+            opcion=Excepciones.comprobarInt(sc);
+            opcion=Excepciones.comprobarIntRango(opcion,3,0);
             if (opcion==1){
                 opcion = gestorLibrosAdministrador(opcion, biblioteca);
             }
@@ -410,6 +422,7 @@ public class Main {
         }
         return privilegios;
     }
+
     /**
      * Metodo del menu del gestor de Personas de los administradores, recibe por parametro el int opcion
      * para poder entrar en el bucle y el objeto biblioteca de la clase Biblioteca para poder entrar en
@@ -419,7 +432,7 @@ public class Main {
      * @param biblioteca Objeto de la clase Biblioteca.
      * @return opcion int para poder entrar en el bucle i salir de el
      */
-    public static int gestorPersonasAdministrador(int opcion, Biblioteca biblioteca) {
+    public static int gestorPersonasAdministrador(int opcion, Biblioteca biblioteca) throws Excepciones {
         int opcionGestor;
         //bucle donde transcurren las opciones del gestor de personas
         while (opcion==2){
@@ -429,15 +442,22 @@ public class Main {
             System.out.println("Pulsa 3 para añadir un usuario al sistema");
             System.out.println("Pulsa 4 para eliminar un usuario del sistema");
             System.out.println("Pulsa 5 para volver al selector de gestores");
-            opcionGestor=sc.nextInt();
-            sc.nextLine();
+            //Excepcion que se trata en el metodo que ocurre
+            opcionGestor=Excepciones.comprobarInt(sc);
+            opcionGestor=Excepciones.comprobarIntRango(opcionGestor,5,1);
             switch (opcionGestor){
                 case 1:
                     crearBibliotecario(biblioteca);
                     break;
                     
                 case 2:
-                    Bibliotecario.eliminarPersona(biblioteca.getListaPersona());
+                    //Excepcion que ocurre en otro metodo y es tratado en el metodo llamante
+                    try{
+                        Bibliotecario.eliminarPersona(biblioteca.getListaPersona());
+                    }
+                    catch(Excepciones e1){
+                        System.out.println(e1.getMessage());
+                    }
                     break; 
                     
                 case 3:
@@ -445,7 +465,13 @@ public class Main {
                     break;
                     
                 case 4:
-                    Usuario.eliminarPersona(biblioteca.getListaPersona());
+                    //Excepcion que ocurre en otro metodo y es tratado en el metodo llamante
+                    try{
+                        Usuario.eliminarPersona(biblioteca.getListaPersona());
+                    }
+                    catch(Excepciones e1){
+                        System.out.println(e1.getMessage());
+                    }
                     break;
                     
                 case 5:
@@ -499,7 +525,7 @@ public class Main {
      * @param biblioteca Objeto de la clase Biblioteca.
      * @return opcion int para poder entrar en el bucle i salir de el
      */
-    public static int gestorLibrosAdministrador(int opcion, Biblioteca biblioteca) {
+    public static int gestorLibrosAdministrador(int opcion, Biblioteca biblioteca) throws InputMismatchException, Excepciones{
         int opcionGestor;
         //bucle donde transcurren las opciones del gestor de libros
         while (opcion==1){
@@ -518,10 +544,21 @@ public class Main {
             System.out.println("Pulsa 0 volver al selector de gestores");
             opcionGestor=sc.nextInt();
             sc.nextLine();
-            
+            //modificar trycatch, 
             switch (opcionGestor){
                 case 1:
-                    Libro.anadirLibro(biblioteca.getListaLibros());
+                    boolean correcto=false;
+                    while (!correcto){
+                        //Excepcion que se trata en el metodo llamante
+                        try{
+                            Libro.anadirLibro(biblioteca.getListaLibros());
+                            correcto=true;
+                        }
+                        catch(InputMismatchException excepcion){
+                            System.out.println("ERROR: Error en los datos insertados en el libro, porfavor inserta los datos correctos");
+                            Libro.sc.nextLine();
+                        }
+                    }
                     break;
                     
                 case 2:
@@ -564,25 +601,31 @@ public class Main {
                     break;
                     
                 case 9:
-                    System.out.println("Dime el numero de telefono de tu usuario");
-                    int telefono=sc.nextInt();
-                    sc.nextLine();
-                    System.out.println("Ahora tu correo electronico");
-                    String correo=sc.nextLine();
-                    int i=0;
-                    boolean encontrado=false;
-                    while (i<biblioteca.getListaPersona().size() && !encontrado){
-                        if(biblioteca.getListaPersona().get(i) instanceof Usuario){
-                            if (((Usuario)biblioteca.getListaPersona().get(i)).getTelefono()==(telefono) && 
-                                ((Usuario)biblioteca.getListaPersona().get(i)).getCorreoElectronico().equals(correo)){
-                                ((Usuario)biblioteca.getListaPersona().get(i)).mostrarReservas();
-                                encontrado=true;
+                    // Excepcion que ocurre en el metodo y se trata en el metodo
+                    try{
+                        System.out.println("Dime el numero de telefono de tu usuario");
+                        int telefono=sc.nextInt();
+                        sc.nextLine();
+                        System.out.println("Ahora tu correo electronico");
+                        String correo=sc.nextLine();
+                        int i=0;
+                        boolean encontrado=false;
+                        while (i<biblioteca.getListaPersona().size() && !encontrado){
+                            if(biblioteca.getListaPersona().get(i) instanceof Usuario){
+                                if (((Usuario)biblioteca.getListaPersona().get(i)).getTelefono()==(telefono) && 
+                                    ((Usuario)biblioteca.getListaPersona().get(i)).getCorreoElectronico().equals(correo)){
+                                    ((Usuario)biblioteca.getListaPersona().get(i)).mostrarReservas();
+                                    encontrado=true;
+                                }
                             }
+                            i++;
                         }
-                        i++;
+                        if(!encontrado){
+                            throw new Excepciones(3);
+                        }
                     }
-                    if(!encontrado){
-                        System.out.println("No existe ningun usuario de la biblioteca que tenga ese telefono y ese correo electronico, hay algun error");
+                    catch(Excepciones e1){
+                        System.out.println(e1.getMessage());
                     }
                     break;
                 

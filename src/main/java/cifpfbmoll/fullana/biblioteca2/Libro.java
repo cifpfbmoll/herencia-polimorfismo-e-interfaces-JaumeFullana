@@ -176,6 +176,7 @@ public class Libro {
                 else{
                     System.out.println("Procedo a eliminar el libro: "+(listaLibros.get(i).getTitulo()));
                     listaLibros.remove(i);
+                    contadorLibros--;
                 }
             }   
         }

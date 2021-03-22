@@ -88,8 +88,8 @@ public abstract class Persona {
         System.out.println("Escribe el segundo apellido del usuario");
         this.setApellido2(sc.nextLine());
         System.out.println("Escribe la edad del usuario");
-        this.setEdad(sc.nextInt());
-        sc.nextLine();
+        //Excepcion que se comprueba en el metodo donde ocurre
+        this.setEdad(Excepciones.comprobarInt(sc));
     };
     /**
      * Metodo que busca una Persona por su nombre y apellidos en la lista 
@@ -98,7 +98,7 @@ public abstract class Persona {
      * 
      * @param listaPersona Arraylist donde se guardan las Personas de la biblioteca.
      */
-    public static void eliminarPersona(ArrayList <Persona> listaPersona){
+    public static void eliminarPersona(ArrayList <Persona> listaPersona) throws Excepciones{
         System.out.println("Escribe el nombre de la persona");
         String nombre=sc.nextLine();
         System.out.println("Escribe el 1 apellido de la persona");
@@ -116,7 +116,7 @@ public abstract class Persona {
             }
         }
         if (!encontrado){
-            System.out.println("No existe ninguna persona con ese nombre y apellidos en el sistema");
+            throw new Excepciones(5);
         }
     }
     /**
